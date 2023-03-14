@@ -1,0 +1,3 @@
+# bfg
+
+Blazingly fast git
