@@ -16,7 +16,17 @@ let update =
         printf "git rebase origin/%s\n%!" branch;
     )
 
+let status =
+  Command.basic
+    ~summary:"Show pretty current status"
+    (Command.Param.return
+      (fun () -> Process.proc "git status")
+    )
+
 let command =
   Command.group
-    ~summary:"Manipulate dates"
-    [ "start", start; "update", update ]
+    ~summary:"Manipulate git workflow"
+    [ "status", status
+    ; "start", start
+    ; "update", update
+    ]
