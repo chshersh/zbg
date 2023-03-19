@@ -1,1 +1,1 @@
-let () = print_endline "Hello, World!"
+let () = Bfg.Main.main ()
