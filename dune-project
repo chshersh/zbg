@@ -1,11 +1,11 @@
 (lang dune 3.7)
 
-(name bfg)
+(name zbg)
 
 (generate_opam_files true)
 
 (source
- (github chshersh/bfg))
+ (github chshersh/zbg))
 
 (authors "Dmitrii Kovanikov")
 (maintainers "Dmitrii Kovanikov")
@@ -15,9 +15,9 @@
 (documentation https://url/to/documentation)
 
 (package
- (name bfg)
- (synopsis "Blazingly fast git")
- (description "A CLI tool to use git blazingly fast")
+ (name zbg)
+ (synopsis "Zero bullshit git")
+ (description "A CLI tool to use git without ceremony")
  (depends ocaml dune)
  (tags
   (cli tool git workflow)))

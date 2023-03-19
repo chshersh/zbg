@@ -1,4 +1,4 @@
 (executable
- (public_name bfg)
+ (public_name zbg)
  (name main)
- (libraries bfg))
+ (libraries zbg))

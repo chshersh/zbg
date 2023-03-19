@@ -1,1 +1,1 @@
-let () = Bfg.Main.main ()
+let () = Zbg.Main.main ()

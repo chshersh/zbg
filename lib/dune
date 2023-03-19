@@ -1,4 +1,4 @@
 (library
- (name bfg)
+ (name zbg)
  (libraries core core_unix.command_unix)
  (preprocess (pps ppx_jane)))
