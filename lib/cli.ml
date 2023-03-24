@@ -1,13 +1,23 @@
 open Core
 
-let start =
+let cmd_switch =
+  Command.basic
+    ~summary:"Switch to [branch] and sync it with origin"
+    (let%map_open.Command branch =
+      anon (maybe_with_default "main" ("branch" %: string))
+    in
+      fun () ->
+        Git.switch branch
+    )
+
+let cmd_new =
   Command.basic
     ~summary:"Create a new branch <login>/[description]"
     (let%map_open.Command description = anon ("description" %: string) in
       fun () ->
         printf "git checkout -b <login>/%s\n%!" description)
 
-let update =
+let cmd_update =
   Command.basic
     ~summary:"Rebase current branch on top of remote origin/[branch]"
     (let%map_open.Command branch = anon ("branch" %: string) in
@@ -16,7 +26,7 @@ let update =
         printf "git rebase origin/%s\n%!" branch;
     )
 
-let status =
+let cmd_status =
   Command.basic
     ~summary:"Show pretty current status"
     (Command.Param.return
@@ -26,7 +36,8 @@ let status =
 let command =
   Command.group
     ~summary:"Manipulate git workflow"
-    [ "status", status
-    ; "start", start
-    ; "update", update
+    [ "switch", cmd_switch
+    ; "status", cmd_status
+    ; "new", cmd_new
+    ; "update", cmd_update
     ]
