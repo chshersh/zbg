@@ -41,3 +41,30 @@ let command =
     ; "new", cmd_new
     ; "update", cmd_update
     ]
+
+(*
+TODO:
+
+- push
+- clear
+- status
+- rebase (fresh)
+- update (sync)
+- stash
+- unstash
+- log
+- new
+- tag
+- uncommit
+
+Optional:
+
+- fix
+- commit
+- amend
+
+With API:
+
+- issue
+- milestone
+*)
