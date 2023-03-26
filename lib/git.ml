@@ -9,18 +9,6 @@ type force_flag =
     | NoForce
     | Force
 
-let switch branch =
-  Process.proc (Printf.sprintf "git checkout %s" branch);
-  Process.proc "git pull --ff-only --prune"
-
-let push force =
-  let current_branch = get_current_branch () in
-  let flag_option =
-    match force with
-    | NoForce -> ""
-    | Force -> "--force"
-  in Process.proc (Printf.sprintf "git push --set-upstream origin %s %s" current_branch flag_option)
-
 let clear force =
   let clear_changes () =
     Process.proc "git add .";
@@ -42,3 +30,26 @@ let clear force =
     match yesno ~def:No with
     | No -> print_endline "Aborting 'zbg clear'"
     | Yes -> clear_changes ()
+
+let push force =
+  let current_branch = get_current_branch () in
+  let flag_option =
+    match force with
+    | NoForce -> ""
+    | Force -> "--force"
+  in Process.proc (Printf.sprintf "git push --set-upstream origin %s %s" current_branch flag_option)
+
+let stash msg =
+  let msg_arg =
+    match msg with
+    | None -> ""
+    | Some msg -> Printf.sprintf "--mesage='%s'" msg (* TODO: proper escaping *)
+  in
+  Process.proc (Printf.sprintf "git stash push --include-untracked %s" msg_arg)
+
+let switch branch =
+  Process.proc (Printf.sprintf "git checkout %s" branch);
+  Process.proc "git pull --ff-only --prune"
+
+let unstash () =
+  Process.proc "git stash pop"
