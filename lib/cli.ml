@@ -5,7 +5,6 @@ open Core
 let to_force_flag (flag : bool) =
   if flag then Git.Force else Git.NoForce
 
-
 (* Commands *)
 
 let cmd_clear =
@@ -43,13 +42,6 @@ let cmd_stash =
       message = anon (maybe ("message" %: string))
     in fun () -> Git.stash message)
 
-let cmd_switch =
-  Command.basic
-    ~summary:"Switch to [branch] and sync it with origin"
-    (let%map_open.Command
-      branch = anon (maybe_with_default "main" ("branch" %: string))
-    in fun () -> Git.switch branch)
-
 let cmd_status =
   Command.basic
     ~summary:"Show pretty current status"
@@ -57,20 +49,25 @@ let cmd_status =
       (fun () -> Process.proc "git status")
     )
 
+let cmd_switch =
+  Command.basic
+    ~summary:"Switch to [branch] and sync it with origin"
+    (let%map_open.Command
+      branch = anon (maybe_with_default "main" ("branch" %: string))
+    in fun () -> Git.switch branch)
+
+let cmd_sync =
+  Command.basic
+    ~summary:"Sync local branch with the remote branch"
+    (let%map_open.Command
+      force = flag "f" no_arg ~doc:"Sync forcefully by overriding local version with the remote one instead of rebasing"
+    in fun () -> Git.sync (to_force_flag force))
+
 let cmd_unstash =
   Command.basic
     ~summary:"Unstash last stashed changes"
     (Command.Param.return
       (fun () -> Git.unstash ())
-    )
-
-let cmd_update =
-  Command.basic
-    ~summary:"Rebase current branch on top of remote origin/[branch]"
-    (let%map_open.Command branch = anon ("branch" %: string) in
-      fun () ->
-        printf "git fetch origin %s\n%!" branch;
-        printf "git rebase origin/%s\n%!" branch;
     )
 
 (* Grouping all commands *)
@@ -85,7 +82,8 @@ let command =
     ; "stash", cmd_stash
     ; "status", cmd_status
     ; "switch", cmd_switch
-    ; "update", cmd_update
+    ; "sync", cmd_sync
+    ; "unstash", cmd_unstash
     ]
 
 (*
@@ -93,7 +91,6 @@ TODO:
 
 - commit
 - status
-- update (sync)
 - log
 - new
 - tag

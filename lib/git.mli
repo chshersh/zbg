@@ -18,5 +18,8 @@ val stash : string option -> unit
 (** Switch to a new branch and update to the latest version of origin. *)
 val switch : string -> unit
 
+(** Sync local branch with the remote branch. *)
+val sync : force_flag -> unit
+
 (** Unstash latest changes. *)
 val unstash : unit -> unit

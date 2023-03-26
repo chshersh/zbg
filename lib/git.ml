@@ -65,5 +65,14 @@ let switch branch =
   Process.proc (Printf.sprintf "git checkout %s" branch);
   Process.proc "git pull --ff-only --prune"
 
+let sync force =
+  let current_branch = get_current_branch () in
+  match force with
+    | NoForce ->
+      Process.proc (Printf.sprintf "git pull --ff-only origin %s" current_branch)
+    | Force ->
+      Process.proc (Printf.sprintf "git fetch origin %s" current_branch);
+      Process.proc (Printf.sprintf "git reset --hard origin/%s" current_branch)
+
 let unstash () =
   Process.proc "git stash pop"
