@@ -40,6 +40,10 @@ let clear force =
     | No -> print_endline "Aborting 'zbg clear'"
     | Yes -> clear_changes ()
 
+let commit message =
+  Process.proc "git add .";
+  Process.proc (Printf.sprintf "git commit --message=\"%s\"" message) (* TODO: Escape quotes in message *)
+
 let push force =
   let current_branch = get_current_branch () in
   let flag_option =

@@ -14,6 +14,13 @@ let cmd_clear =
       force = flag "f" no_arg ~doc:"Clear forcefully without asking any questions"
     in fun () -> Git.clear (to_force_flag force))
 
+let cmd_commit =
+  Command.basic
+    ~summary:"Commit all local changes"
+    (let%map_open.Command
+      message = anon ("message" %: string)
+    in fun () -> Git.commit message)
+
 let cmd_new =
   Command.basic
     ~summary:"Create a new branch <login>/[description]"
@@ -76,6 +83,7 @@ let command =
   Command.group
     ~summary:"Easier git workflow"
     [ "clear", cmd_clear
+    ; "commit", cmd_commit
     ; "new", cmd_new
     ; "push", cmd_push
     ; "rebase", cmd_rebase
@@ -89,7 +97,6 @@ let command =
 (*
 TODO:
 
-- commit
 - status
 - log
 - new

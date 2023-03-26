@@ -6,6 +6,9 @@ type force_flag =
 (** Clear all local changes unrecoverably. *)
 val clear : force_flag -> unit
 
+(** Commit all local changes. *)
+val commit : string -> unit
+
 (** Push the current branch to origin. *)
 val push : force_flag -> unit
 
