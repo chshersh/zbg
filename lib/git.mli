@@ -9,6 +9,9 @@ val clear : force_flag -> unit
 (** Push the current branch to origin. *)
 val push : force_flag -> unit
 
+(** Rebase local branch on top of origin/<branch>. *)
+val rebase : string option -> unit
+
 (** Stash all local changes. *)
 val stash : string option -> unit
 

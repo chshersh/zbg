@@ -29,6 +29,13 @@ let cmd_push =
       force = flag "f" no_arg ~doc:"Push forcefully and override changes"
     in fun () -> Git.push (to_force_flag force))
 
+let cmd_rebase =
+  Command.basic
+    ~summary:"Rebase current local branch on top of origin/[branch]"
+    (let%map_open.Command
+      branch = anon (maybe ("branch" %: string))
+    in fun () -> Git.rebase branch)
+
 let cmd_stash =
   Command.basic
     ~summary:"Stash all local changes"
@@ -74,6 +81,7 @@ let command =
     [ "clear", cmd_clear
     ; "new", cmd_new
     ; "push", cmd_push
+    ; "rebase", cmd_rebase
     ; "stash", cmd_stash
     ; "status", cmd_status
     ; "switch", cmd_switch
@@ -85,7 +93,6 @@ TODO:
 
 - commit
 - status
-- rebase (fresh)
 - update (sync)
 - log
 - new

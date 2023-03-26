@@ -3,6 +3,15 @@
 let get_current_branch () =
   Process.proc_stdout "git rev-parse --abbrev-ref HEAD"
 
+let fetch_main_branch () =
+  let remote_main_branch = Process.proc_stdout "git rev-parse --abbrev-ref origin/HEAD" in
+  Process.proc_stdout (Printf.sprintf "basename %s" remote_main_branch) (* TODO: use pure function *)
+
+let branch_or_main branch_opt =
+  match branch_opt with
+  | Some branch -> branch
+  | None -> fetch_main_branch ()
+
 (* PUBLIC API *)
 
 type force_flag =
@@ -38,6 +47,11 @@ let push force =
     | NoForce -> ""
     | Force -> "--force"
   in Process.proc (Printf.sprintf "git push --set-upstream origin %s %s" current_branch flag_option)
+
+let rebase branch_opt =
+  let branch = branch_or_main branch_opt in
+  Process.proc (Printf.sprintf "git fetch origin %s" branch);
+  Process.proc (Printf.sprintf "git rebase origin/%s" branch) (* TODO: handle failed rebase *)
 
 let stash msg =
   let msg_arg =
