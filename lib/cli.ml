@@ -19,8 +19,15 @@ let cmd_push =
   Command.basic
     ~summary:"Push the current branch to origin"
     (let%map_open.Command
-      force = flag "-f" no_arg ~doc:"Push forcefully and override changes"
+      force = flag "f" no_arg ~doc:"Push forcefully and override changes"
     in fun () -> Git.push (to_force_flag force))
+
+let cmd_clear =
+  Command.basic
+    ~summary:"Clear all local changes without the ability to recover"
+    (let%map_open.Command
+      force = flag "f" no_arg ~doc:"Clear forcefully without asking any questions"
+    in fun () -> Git.clear (to_force_flag force))
 
 let cmd_new =
   Command.basic
@@ -52,6 +59,7 @@ let command =
     ~summary:"Manipulate git workflow"
     [ "switch", cmd_switch
     ; "push", cmd_push
+    ; "clear", cmd_clear
     ; "status", cmd_status
     ; "new", cmd_new
     ; "update", cmd_update
@@ -60,7 +68,6 @@ let command =
 (*
 TODO:
 
-- clear
 - status
 - rebase (fresh)
 - update (sync)

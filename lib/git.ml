@@ -20,3 +20,25 @@ let push force =
     | NoForce -> ""
     | Force -> "--force"
   in Process.proc (Printf.sprintf "git push --set-upstream origin %s %s" current_branch flag_option)
+
+let clear force =
+  let clear_changes () =
+    Process.proc "git add .";
+    Process.proc "git reset --hard"
+  in
+
+  let prompt = "\
+* 'zbg clear' deletes all uncommited changes !!! PERMANENTLY !!!
+  Hint: If you want to recover them later, use 'zbg stash' instead.
+  Are you sure you to delete all uncommited changes? (y/N)
+"
+  in
+
+  match force with
+  | Force -> clear_changes ()
+  | NoForce ->
+    Printf.printf "%s%!" prompt;
+    let open Prompt in
+    match yesno ~def:No with
+    | No -> print_endline "Aborting 'zbg clear'"
+    | Yes -> clear_changes ()
