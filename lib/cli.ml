@@ -1,14 +1,26 @@
 open Core
 
+(* Custom types *)
+
+let to_force_flag (flag : bool) =
+  if flag then Git.Force else Git.NoForce
+
+
+(* Commands *)
+
 let cmd_switch =
   Command.basic
     ~summary:"Switch to [branch] and sync it with origin"
-    (let%map_open.Command branch =
-      anon (maybe_with_default "main" ("branch" %: string))
-    in
-      fun () ->
-        Git.switch branch
-    )
+    (let%map_open.Command
+      branch = anon (maybe_with_default "main" ("branch" %: string))
+    in fun () -> Git.switch branch)
+
+let cmd_push =
+  Command.basic
+    ~summary:"Push the current branch to origin"
+    (let%map_open.Command
+      force = flag "-f" no_arg ~doc:"Push forcefully and override changes"
+    in fun () -> Git.push (to_force_flag force))
 
 let cmd_new =
   Command.basic
@@ -33,10 +45,13 @@ let cmd_status =
       (fun () -> Process.proc "git status")
     )
 
+(* Grouping all commands *)
+
 let command =
   Command.group
     ~summary:"Manipulate git workflow"
     [ "switch", cmd_switch
+    ; "push", cmd_push
     ; "status", cmd_status
     ; "new", cmd_new
     ; "update", cmd_update
@@ -45,7 +60,6 @@ let command =
 (*
 TODO:
 
-- push
 - clear
 - status
 - rebase (fresh)
