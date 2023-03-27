@@ -57,11 +57,11 @@ let rebase branch_opt =
   Process.proc (Printf.sprintf "git fetch origin %s" branch);
   Process.proc (Printf.sprintf "git rebase origin/%s" branch) (* TODO: handle failed rebase *)
 
-let stash msg =
+let stash msg_opt =
   let msg_arg =
-    match msg with
+    match msg_opt with
     | None -> ""
-    | Some msg -> Printf.sprintf "--mesage='%s'" msg (* TODO: proper escaping *)
+    | Some msg -> Printf.sprintf "--message='%s'" msg (* TODO: proper escaping *)
   in
   Process.proc (Printf.sprintf "git stash push --include-untracked %s" msg_arg)
 
