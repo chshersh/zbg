@@ -5,6 +5,9 @@ open Core
 let to_force_flag (flag : bool) =
   if flag then Git.Force else Git.NoForce
 
+let to_tag_action (is_delete : bool) =
+  if is_delete then Git.Delete else Git.Create
+
 (* Commands *)
 
 let cmd_clear =
@@ -70,6 +73,14 @@ let cmd_sync =
       force = flag "f" no_arg ~doc:"Sync forcefully by overriding local version with the remote one instead of rebasing"
     in fun () -> Git.sync (to_force_flag force))
 
+let cmd_tag =
+  Command.basic
+    ~summary:"Create or delete (and push) tags"
+    (let%map_open.Command
+      is_delete = flag "d" no_arg ~doc:"Delete existing tag instead of creating" and
+      tag_name = anon ("tag_name" %: string)
+    in fun () -> Git.tag tag_name (to_tag_action is_delete))
+
 let cmd_uncommit =
   Command.basic
     ~summary:"Undo last commit "
@@ -98,6 +109,7 @@ let command =
     ; "status", cmd_status
     ; "switch", cmd_switch
     ; "sync", cmd_sync
+    ; "tag", cmd_tag
     ; "uncommit", cmd_uncommit
     ; "unstash", cmd_unstash
     ]
@@ -108,7 +120,6 @@ TODO:
 - status
 - log
 - new
-- tag
 - amend
 
 With API:

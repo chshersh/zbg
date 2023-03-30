@@ -18,6 +18,10 @@ type force_flag =
     | NoForce
     | Force
 
+type tag_action =
+    | Delete
+    | Create
+
 let clear force =
   let clear_changes () =
     Process.proc "git add .";
@@ -77,6 +81,19 @@ let sync force =
     | Force ->
       Process.proc (Printf.sprintf "git fetch origin %s" current_branch);
       Process.proc (Printf.sprintf "git reset --hard origin/%s" current_branch)
+
+let tag tag_name tag_action =
+  match tag_action with
+    | Create ->
+      (* create tag locally *)
+      Process.proc (Printf.sprintf "git tag --annotate %s --message='Tag for the %s release'" tag_name tag_name);
+      (* push tags *)
+      Process.proc "git push origin --tags"
+    | Delete ->
+      (* delete tag locally *)
+      Process.proc (Printf.sprintf "git tag --delete %s" tag_name);
+      (* delete tag remotely *)
+      Process.proc (Printf.sprintf "git push --delete origin %s" tag_name)
 
 let uncommit () =
   Process.proc "git reset HEAD~1"

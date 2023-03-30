@@ -3,6 +3,11 @@ type force_flag =
     | NoForce
     | Force
 
+(* Action to do with the tag: delete or create *)
+type tag_action =
+    | Delete
+    | Create
+
 (** Clear all local changes unrecoverably. *)
 val clear : force_flag -> unit
 
@@ -23,6 +28,9 @@ val switch : string -> unit
 
 (** Sync local branch with the remote branch. *)
 val sync : force_flag -> unit
+
+(** Create or delete tag. *)
+val tag : string -> tag_action -> unit
 
 (** Undo last commit. *)
 val uncommit : unit -> unit
