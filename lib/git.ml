@@ -78,5 +78,8 @@ let sync force =
       Process.proc (Printf.sprintf "git fetch origin %s" current_branch);
       Process.proc (Printf.sprintf "git reset --hard origin/%s" current_branch)
 
+let uncommit () =
+  Process.proc "git reset HEAD~1"
+
 let unstash () =
   Process.proc "git stash pop"

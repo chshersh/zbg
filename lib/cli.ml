@@ -70,6 +70,13 @@ let cmd_sync =
       force = flag "f" no_arg ~doc:"Sync forcefully by overriding local version with the remote one instead of rebasing"
     in fun () -> Git.sync (to_force_flag force))
 
+let cmd_uncommit =
+  Command.basic
+    ~summary:"Undo last commit "
+    (Command.Param.return
+      (fun () -> Git.uncommit ())
+    )
+
 let cmd_unstash =
   Command.basic
     ~summary:"Unstash last stashed changes"
@@ -91,6 +98,7 @@ let command =
     ; "status", cmd_status
     ; "switch", cmd_switch
     ; "sync", cmd_sync
+    ; "uncommit", cmd_uncommit
     ; "unstash", cmd_unstash
     ]
 
@@ -101,8 +109,6 @@ TODO:
 - log
 - new
 - tag
-- uncommit
-- fix
 - amend
 
 With API:

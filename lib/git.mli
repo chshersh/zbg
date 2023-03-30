@@ -24,5 +24,8 @@ val switch : string -> unit
 (** Sync local branch with the remote branch. *)
 val sync : force_flag -> unit
 
+(** Undo last commit. *)
+val uncommit : unit -> unit
+
 (** Unstash latest changes. *)
 val unstash : unit -> unit
