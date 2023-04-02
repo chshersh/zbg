@@ -48,6 +48,30 @@ let commit message =
   Process.proc "git add .";
   Process.proc (Printf.sprintf "git commit --message=\"%s\"" message) (* TODO: Escape quotes in message *)
 
+let log commit =
+  (* Log format is:
+
+  ➡️ ecf8c6f: Implement 'uncommit'  (tag: v0.0.0)
+     Author: Dmitrii Kovanikov <kovanikov@gmail.com>
+       Date: 26 Mar 2023 18:38:58 +0100
+
+  *)
+  let log_format =
+    "➡️  %C(bold green)%h%C(reset): %C(italic cyan)%s%C(reset) %C(yellow)%d%C(reset)%n \
+   \    %C(bold blue)Author%C(reset): %an <%ae>%n \
+   \      %C(bold blue)Date%C(reset): %cd%n"
+  in
+  let date_format = "%d %b %Y %H:%M:%S %z" in
+  Process.proc (Printf.sprintf
+      "git log \
+      --date='format:%s' \
+      --format='format: %s' \
+      %s"
+      date_format
+      log_format
+      commit
+  )
+
 let push force =
   let current_branch = get_current_branch () in
   let flag_option =

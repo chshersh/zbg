@@ -14,6 +14,9 @@ val clear : force_flag -> unit
 (** Commit all local changes. *)
 val commit : string -> unit
 
+(** Show pretty log. *)
+val log : string -> unit
+
 (** Push the current branch to origin. *)
 val push : force_flag -> unit
 

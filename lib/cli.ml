@@ -24,6 +24,13 @@ let cmd_commit =
       message = anon ("message" %: string)
     in fun () -> Git.commit message)
 
+let cmd_log =
+  Command.basic
+    ~summary:"Show pretty log"
+    (let%map_open.Command
+      commit = anon (maybe_with_default "HEAD" ("commit" %: string))
+    in fun () -> Git.log commit)
+
 let cmd_new =
   Command.basic
     ~summary:"Create a new branch <login>/[description]"
@@ -102,6 +109,7 @@ let command =
     ~summary:"Easier git workflow"
     [ "clear", cmd_clear
     ; "commit", cmd_commit
+    ; "log", cmd_log
     ; "new", cmd_new
     ; "push", cmd_push
     ; "rebase", cmd_rebase
@@ -120,10 +128,8 @@ TODO:
 - status
 - log
 - new
-- amend
 
 With API:
 
 - issue
-- milestone
 *)
