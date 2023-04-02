@@ -5,11 +5,11 @@ let proc cmd =
 
 let collect_chan (channel : in_channel) =
   let rec loop acc =
-      let line = input_line channel in
-      loop (acc ^ line ^ "\n")
-    in
-  try loop ""
-  with End_of_file -> "";;
+    match input_line channel with
+    | exception End_of_file -> acc
+    | line -> loop (acc ^ line ^ "\n")
+  in
+  loop ""
 
 let proc_stdout cmd =
   let ((proc_stdout, _proc_stdin, _proc_stderr) as process) = Unix.open_process_full cmd [||] in
