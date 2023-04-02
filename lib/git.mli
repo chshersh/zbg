@@ -26,6 +26,9 @@ val rebase : string option -> unit
 (** Stash all local changes. *)
 val stash : string option -> unit
 
+(** Show pretty status of local changes. *)
+val status : string -> unit
+
 (** Switch to a new branch and update to the latest version of origin. *)
 val switch : string -> unit
 

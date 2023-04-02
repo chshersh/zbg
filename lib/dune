@@ -1,4 +1,8 @@
 (library
  (name zbg)
- (libraries core core_unix.command_unix)
+ (libraries
+   ANSITerminal
+   core
+   core_unix.command_unix
+ )
  (preprocess (pps ppx_jane)))

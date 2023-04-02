@@ -93,6 +93,8 @@ let stash msg_opt =
   in
   Process.proc (Printf.sprintf "git stash push --include-untracked %s" msg_arg)
 
+let status = Status.status
+
 let switch branch =
   Process.proc (Printf.sprintf "git checkout %s" branch);
   Process.proc "git pull --ff-only --prune"

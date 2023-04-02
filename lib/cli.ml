@@ -61,10 +61,11 @@ let cmd_stash =
 
 let cmd_status =
   Command.basic
-    ~summary:"Show pretty current status"
-    (Command.Param.return
-      (fun () -> Process.proc "git status")
-    )
+    ~summary:"Show pretty status of local changes"
+    (let%map_open.Command
+      commit = anon (maybe_with_default "HEAD" ("commit" %: string))
+    in fun () -> Git.status commit)
+
 
 let cmd_switch =
   Command.basic
@@ -125,8 +126,6 @@ let command =
 (*
 TODO:
 
-- status
-- log
 - new
 
 With API:
