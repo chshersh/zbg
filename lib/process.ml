@@ -3,7 +3,7 @@ let proc cmd =
   let _exit_code = Unix.system cmd in
   ()
 
-let collect_chan (channel : in_channel) =
+let collect_chan (channel : in_channel) : string =
   let rec loop acc =
     match input_line channel with
     | exception End_of_file -> acc

@@ -1,13 +1,13 @@
 (* INTERNALS *)
 
-let get_current_branch () =
+let get_current_branch () : string =
   Process.proc_stdout "git rev-parse --abbrev-ref HEAD"
 
-let fetch_main_branch () =
+let fetch_main_branch () : string =
   let remote_main_branch = Process.proc_stdout "git rev-parse --abbrev-ref origin/HEAD" in
   Process.proc_stdout (Printf.sprintf "basename %s" remote_main_branch) (* TODO: use pure function *)
 
-let branch_or_main branch_opt =
+let branch_or_main (branch_opt : string option) : string =
   match branch_opt with
   | Some branch -> branch
   | None -> fetch_main_branch ()

@@ -2,10 +2,10 @@ open Core
 
 (* Custom types *)
 
-let to_force_flag (flag : bool) =
+let to_force_flag (flag : bool) : Git.force_flag =
   if flag then Git.Force else Git.NoForce
 
-let to_tag_action (is_delete : bool) =
+let to_tag_action (is_delete : bool) : Git.tag_action =
   if is_delete then Git.Delete else Git.Create
 
 (* Commands *)
