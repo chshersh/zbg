@@ -1,5 +1,5 @@
 let proc cmd =
-  Printf.eprintf "> %s\n%!" cmd;
+  Printf.eprintf "🐚  %s\n%!" cmd;
   let _exit_code = Unix.system cmd in
   ()
 
