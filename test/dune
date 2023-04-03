@@ -1,2 +1,6 @@
-(test
- (name zbg))
+(library
+  (name zbg_test)
+  (libraries zbg)
+  (inline_tests)
+  (preprocess (pps ppx_inline_test ppx_assert))
+)

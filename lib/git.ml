@@ -29,9 +29,9 @@ let clear force =
   in
 
   let prompt = "\
-* 'zbg clear' deletes all uncommited changes !!! PERMANENTLY !!!
-  Hint: If you want to recover them later, use 'zbg stash' instead.
-  Are you sure you to delete all uncommited changes? (y/N)
+⚠️  'zbg clear' deletes all uncommited changes !!! PERMANENTLY !!!
+   Hint: If you want to recover them later, use 'zbg stash' instead.
+   Are you sure you to delete all uncommited changes? (y/N)
 "
   in
 

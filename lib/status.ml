@@ -65,6 +65,7 @@ type patch_type =
     | Unmerged
     | Unknown
     | BrokenPairing
+    [@@deriving sexp, ord]
 
 (* Parses 'patch_type' from string representation.
 
@@ -118,7 +119,7 @@ R100    pancake       muffin
 type file_status =
     { patch_type: patch_type;
       file: string;  (* single files or two concatenated files in case of R or C *)
-    }
+    }[@@deriving sexp, ord]
 
 (* Parses the output of `git diff --name-status`.
 
@@ -170,7 +171,7 @@ type diff_details =
   { file: string;  (* file name *)
     change_count: string;  (* number of changed lines*)
     signs: string;  (* + and - signs *)
-  }
+  }[@@deriving sexp, ord]
 
 (* Split the output of `git diff --stat` into the list of words:
 
@@ -211,26 +212,30 @@ let expand_renamed_paths (left : string) (right : string) : string =
   let (parent, middle_components, suffix) =
     let (parent, left_component) =
       match String.lsplit2 left ~on:'{' with
-      | None -> (left, "")
+      | None -> ("", left)
       | Some res -> res
     in
     let (right_component, suffix) =
       match String.rsplit2 right ~on:'}' with
-      | None -> ("", right)
+      | None -> (right, "")
       | Some res -> res
     in (parent, [left_component; right_component], suffix)
   in
-  let mk_path comp = parent ^ comp ^ suffix in
+  let append_path (p1 : string) (p2 : string) =
+    match () with
+    | () when String.is_empty p1 -> p2
+    | () when String.is_empty p2 -> p1
+    | () when Caml.(==) p1.[String.length p1 - 1] '/' && Caml.(==) p2.[0] '/' ->
+      p1 ^ String.drop_prefix p2 1
+    | _ -> p1 ^ p2
+  in
+
+  let mk_path comp = append_path parent (append_path comp suffix) in
   String.concat ~sep:" => " (List.map middle_components ~f:mk_path)
 
 (* Internal function for [parse_diff_stat] that takes diff stat as a list of words. *)
-let parse_diff_stat_words (words : string list) : diff_details option =
+let parse_diff_details_words (words : string list) : diff_details option =
   match words with
-  | [file; change_count; signs] -> Some
-    { file;
-      change_count;
-      signs;
-    }
   | prev_file :: "=>" :: new_file :: change_count :: rest -> Some
     { file = expand_renamed_paths prev_file new_file;
       change_count;
@@ -240,6 +245,11 @@ let parse_diff_stat_words (words : string list) : diff_details option =
     { file;
       change_count = "Bin";
       signs = unwords rest;
+    }
+  | file :: change_count :: signs -> Some
+    { file;
+      change_count;
+      signs = String.concat signs;
     }
   | _ -> None
 
@@ -263,8 +273,8 @@ pancake                |   2 ++
 .pancake.un~           | Bin 0 -> 412 bytes
 ```
 *)
-let parse_diff_stat (stat_line : string) : diff_details option =
-  split_stats stat_line |> parse_diff_stat_words
+let parse_diff_details (stat_line : string) : diff_details option =
+  split_stats stat_line |> parse_diff_details_words
 
 (* Return `diff_stat` for a single file from the parsed result of the following
 git command:
@@ -288,7 +298,7 @@ let get_file_diff_stat ~(commit : string) ~(file : string) : diff_details =
     match String.split_lines diff_stat with
     | stat_line :: _ ->
       Option.value
-        (parse_diff_stat stat_line)
+        (parse_diff_details stat_line)
         ~default:
           { file;
             change_count = "0";
