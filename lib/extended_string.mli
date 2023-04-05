@@ -8,7 +8,7 @@ val unwords : string list -> string
 val words : string -> string list
 
 (* Fill the string with the spaces on the right side. *)
-val justify_left : int -> string -> string
+val fill_right : int -> string -> string
 
 (* Fill the string with the spaces on the left side. *)
-val justify_right : int -> string -> string
+val fill_left : int -> string -> string

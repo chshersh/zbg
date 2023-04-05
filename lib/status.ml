@@ -19,13 +19,15 @@ let with_staged_files : 'a. string -> (unit -> 'a) -> 'a =
  fun git_cmd action ->
   let stage_files =
     List.iter ~f:(fun file ->
-        Fn.ignore (Process.proc_stdout (Printf.sprintf "git add %s" file)))
+        Fn.ignore @@ Process.proc_stdout @@ Printf.sprintf "git add %s" file)
   in
   let reset_files =
     List.iter ~f:(fun file ->
-        Fn.ignore (Process.proc_stdout (Printf.sprintf "git reset -- %s" file)))
+        Fn.ignore
+        @@ Process.proc_stdout
+        @@ Printf.sprintf "git reset -- %s" file)
   in
-  let files_to_stage = String.split_lines (Process.proc_stdout git_cmd) in
+  let files_to_stage = String.split_lines @@ Process.proc_stdout git_cmd in
   stage_files files_to_stage;
   Exn.protect ~f:action ~finally:(fun () -> reset_files files_to_stage)
 
@@ -66,51 +68,31 @@ type patch_type =
 *)
 let parse_patch_type (status_txt : string) : patch_type option =
   match status_txt.[0] with
-  | 'A' ->
-      Some Added
-  | 'C' ->
-      Some Copied
-  | 'D' ->
-      Some Deleted
-  | 'M' ->
-      Some Modified
-  | 'R' ->
-      Some Renamed
-  | 'T' ->
-      Some TypeChanged
-  | 'U' ->
-      Some Unmerged
-  | 'X' ->
-      Some Unknown
-  | 'B' ->
-      Some BrokenPairing
-  | _ ->
-      None
-  | exception Invalid_argument _ ->
-      None
+  | 'A' -> Some Added
+  | 'C' -> Some Copied
+  | 'D' -> Some Deleted
+  | 'M' -> Some Modified
+  | 'R' -> Some Renamed
+  | 'T' -> Some TypeChanged
+  | 'U' -> Some Unmerged
+  | 'X' -> Some Unknown
+  | 'B' -> Some BrokenPairing
+  | _ -> None
+  | exception Invalid_argument _ -> None
 
 (* Display 'patch_type' in colorful and expanded text. *)
 let display_patch_type (patch_type : patch_type) : string =
   let open ANSITerminal in
   match patch_type with
-  | Added ->
-      fmt [ Bold; green ] "added"
-  | Copied ->
-      fmt [ Bold; magenta ] "copied"
-  | Deleted ->
-      fmt [ Bold; red ] "deleted"
-  | Modified ->
-      fmt [ Bold; blue ] "modified"
-  | Renamed ->
-      fmt [ Bold; yellow ] "renamed"
-  | TypeChanged ->
-      fmt [ Bold; cyan ] "type-changed"
-  | Unmerged ->
-      fmt [ Bold ] "unmerged"
-  | Unknown ->
-      fmt [ Bold ] "unknown"
-  | BrokenPairing ->
-      fmt [ Bold ] "broken"
+  | Added -> fmt [ Bold; green ] "added"
+  | Copied -> fmt [ Bold; magenta ] "copied"
+  | Deleted -> fmt [ Bold; red ] "deleted"
+  | Modified -> fmt [ Bold; blue ] "modified"
+  | Renamed -> fmt [ Bold; yellow ] "renamed"
+  | TypeChanged -> fmt [ Bold; cyan ] "type-changed"
+  | Unmerged -> fmt [ Bold ] "unmerged"
+  | Unknown -> fmt [ Bold ] "unknown"
+  | BrokenPairing -> fmt [ Bold ] "broken"
 
 (* Output of `git diff --name-status` stored in a structured way.
 
@@ -152,8 +134,7 @@ let parse_diff_name_status (status : string) : file_status option =
   | ty :: files ->
       Option.map (parse_patch_type ty) ~f:(fun patch_type ->
           { patch_type; file = unwords files })
-  | _ ->
-      None
+  | _ -> None
 
 (* Get the list of all changed files and their change statuses. *)
 let get_file_statuses (commit : string) : file_status list =
@@ -198,10 +179,8 @@ type diff_details = {
 *)
 let split_stats (stat : string) : string list =
   match String.lsplit2 stat ~on:'|' with
-  | None ->
-      [ stat ]
-  | Some (l, r) ->
-      words l @ words r
+  | None -> [ stat ]
+  | Some (l, r) -> words l @ words r
 
 (* Attempts to expand shortened paths which can appear in `git diff --stat`.
 
@@ -221,32 +200,22 @@ let expand_renamed_paths (left : string) (right : string) : string =
   let parent, middle_components, suffix =
     let parent, left_component =
       match String.lsplit2 left ~on:'{' with
-      | None ->
-          ("", left)
-      | Some res ->
-          res
+      | None -> ("", left)
+      | Some res -> res
     in
     let right_component, suffix =
       match String.rsplit2 right ~on:'}' with
-      | None ->
-          (right, "")
-      | Some res ->
-          res
+      | None -> (right, "")
+      | Some res -> res
     in
     (parent, [ left_component; right_component ], suffix)
   in
   let append_path (p1 : string) (p2 : string) =
-    match () with
-    | () when String.is_empty p1 ->
-        p2
-    | () when String.is_empty p2 ->
-        p1
-    | ()
-      when Caml.( == ) p1.[String.length p1 - 1] '/' && Caml.( == ) p2.[0] '/'
-      ->
-        p1 ^ String.drop_prefix p2 1
-    | _ ->
-        p1 ^ p2
+    if String.is_empty p1 then p2
+    else if String.is_empty p2 then p1
+    else if Char.( = ) p1.[String.length p1 - 1] '/' && Caml.( == ) p2.[0] '/'
+    then p1 ^ String.drop_prefix p2 1
+    else p1 ^ p2
   in
 
   let mk_path comp = append_path parent (append_path comp suffix) in
@@ -266,8 +235,7 @@ let parse_diff_details_words (words : string list) : diff_details option =
       Some { file; change_count = "Bin"; signs = unwords rest }
   | file :: change_count :: signs ->
       Some { file; change_count; signs = String.concat signs }
-  | _ ->
-      None
+  | _ -> None
 
 (* Parses a single line from the `git diff --stat` output.
 
@@ -310,15 +278,14 @@ let parse_diff_details (stat_line : string) : diff_details option =
 let get_file_diff_stat ~(commit : string) ~(file : string) : diff_details =
   let diff_stat =
     Process.proc_stdout
-      (Printf.sprintf "git diff %s --stat --color=always -- %s" commit file)
+    @@ Printf.sprintf "git diff %s --stat --color=always -- %s" commit file
   in
   match String.split_lines diff_stat with
   | stat_line :: _ ->
       Option.value
         (parse_diff_details stat_line)
         ~default:{ file; change_count = "0"; signs = "<unable to parse stat>" }
-  | _ ->
-      { file; change_count = "0"; signs = "<unable to match file>" }
+  | _ -> { file; change_count = "0"; signs = "<unable to match file>" }
 
 (* Return `true` if `git rebase` is currently in progress. *)
 let is_rebase_in_progress () : bool =
@@ -328,16 +295,24 @@ let is_rebase_in_progress () : bool =
 (* Helpful message for `git rebase` *)
 let git_rebase_help =
   let open ANSITerminal in
+  let header =
+    fmt [ Bold; blue ] "Rebase is currently in progress! Possible actions:"
+  in
+  let rebase_continue =
+    fmt [ yellow ] "git rebase --continue " ^ ": after fixing all conflicts"
+  in
+  let rebase_skip =
+    fmt [ yellow ] "git rebase --skip     " ^ ": to skip this patch"
+  in
+  let rebase_abort =
+    fmt [ yellow ] "git rebase --abort    " ^ ": to abort the current rebase"
+  in
   unlines
     [
-      fmt [ Bold; blue ] "Rebase is currently in progress! Possible actions:";
-      "    "
-      ^ fmt [ yellow ] "git rebase --continue "
-      ^ ": after fixing all conflicts";
-      "    " ^ fmt [ yellow ] "git rebase --skip     " ^ ": to skip this patch";
-      "    "
-      ^ fmt [ yellow ] "git rebase --abort    "
-      ^ ": to abort the current rebase";
+      header;
+      "    " ^ rebase_continue;
+      "    " ^ rebase_skip;
+      "    " ^ rebase_abort;
     ]
 
 (* Show all files that currently have conflicts. *)
@@ -346,8 +321,7 @@ let show_conflict_files () =
     Process.proc_stdout "git diff --name-only --diff-filter=U"
   in
   match String.split_lines diff_conflict_files with
-  | [] ->
-      ()
+  | [] -> ()
   | conflict_files ->
       let header =
         fmt [ ANSITerminal.Bold; ANSITerminal.red ] "Conflict files:"
@@ -370,9 +344,9 @@ let fmt_diff_stats (change_summaries : change_summary list) : string =
   in
 
   let format_row (change : change_summary) =
-    let patch_type = justify_left patch_type_size change.patch_type in
-    let file = justify_left file_size change.file in
-    let change_count = justify_right change_count_size change.change_count in
+    let patch_type = fill_right patch_type_size change.patch_type in
+    let file = fill_right file_size change.file in
+    let change_count = fill_left change_count_size change.change_count in
     Printf.sprintf "%s  %s | %s %s" patch_type file change_count change.signs
   in
 
@@ -381,6 +355,8 @@ let fmt_diff_stats (change_summaries : change_summary list) : string =
 (* Show pretty diff in the following format:
 
    ```
+   modified  lib/status.ml           | 6 +++---
+   modified  test/extended_string.ml | 8 ++++----
    ```
 
    **NOTE:** Assumes that all deleted and new files are staged.

@@ -21,8 +21,8 @@ let%test_unit "wording_two_words" =
     (Extended_string.words "word1 word2")
     [ "word1"; "word2" ]
 
-let%test_unit "justify_left" =
-  [%test_eq: string] (Extended_string.justify_left 7 "0123") "0123   "
+let%test_unit "fill_right" =
+  [%test_eq: string] (Extended_string.fill_right 7 "0123") "0123   "
 
-let%test_unit "justify_right" =
-  [%test_eq: string] (Extended_string.justify_right 7 "0123") "   0123"
+let%test_unit "fill_left" =
+  [%test_eq: string] (Extended_string.fill_left 7 "0123") "   0123"

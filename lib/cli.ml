@@ -86,12 +86,11 @@ let cmd_tag =
      fun () -> Git.tag tag_name (to_tag_action is_delete))
 
 let cmd_uncommit =
-  Command.basic ~summary:"Undo last commit "
-    (Command.Param.return (fun () -> Git.uncommit ()))
+  Command.basic ~summary:"Undo last commit " (Command.Param.return Git.uncommit)
 
 let cmd_unstash =
   Command.basic ~summary:"Unstash last stashed changes"
-    (Command.Param.return (fun () -> Git.unstash ()))
+    (Command.Param.return Git.unstash)
 
 (* Grouping all commands *)
 

@@ -6,10 +6,8 @@ let proc cmd =
 let collect_chan (channel : in_channel) : string =
   let rec loop acc =
     match input_line channel with
-    | exception End_of_file ->
-        acc
-    | line ->
-        loop (acc ^ line ^ "\n")
+    | exception End_of_file -> acc
+    | line -> loop (acc ^ line ^ "\n")
   in
   loop ""
 

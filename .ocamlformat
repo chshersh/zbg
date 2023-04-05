@@ -1,4 +1,4 @@
 version = 0.25.1
 profile = default
-break-cases = vertical
+break-cases = fit-or-vertical
 break-infix = wrap-or-vertical
