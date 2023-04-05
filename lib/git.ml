@@ -1,3 +1,6 @@
+open Base
+open Stdio
+
 (* INTERNALS *)
 
 let get_current_branch () : string =
@@ -11,6 +14,28 @@ let branch_or_main (branch_opt : string option) : string =
   match branch_opt with
   | Some branch -> branch
   | None -> fetch_main_branch ()
+
+(* Read user login from user.login in git config. *)
+let get_login () : string option =
+  let home_dir = Unix.getenv "HOME" in
+  let login =
+    Process.proc_stdout (Printf.sprintf "HOME=%s git config user.login" home_dir)
+  in
+  if String.is_empty login
+    then None
+    else Some login
+
+let mk_branch_description (description : string list) : string =
+  let is_valid_char c =
+    Char.is_alphanum c ||
+    Char.is_whitespace c ||
+    List.exists ~f:(Char.(=) c) ['/'; '-'; '_']
+  in
+  Extended_string.unwords description
+  |> String.filter ~f:is_valid_char
+  |> Extended_string.words
+  |> (fun l -> List.take l 7)
+  |> String.concat ~sep:"-"
 
 (* PUBLIC API *)
 
@@ -38,7 +63,7 @@ let clear force =
   match force with
   | Force -> clear_changes ()
   | NoForce ->
-    Printf.printf "%s%!" prompt;
+    printf "%s%!" prompt;
     let open Prompt in
     match yesno ~def:No with
     | No -> print_endline "Aborting 'zbg clear'"
@@ -71,6 +96,20 @@ let log commit =
       log_format
       commit
   )
+
+let new_ description =
+  let create_branch branch_name =
+    Process.proc (Printf.sprintf "git checkout -b %s" branch_name)
+  in
+  let branch_description = mk_branch_description description in
+  let branch_name =
+    match get_login () with
+    | Some login -> login ^ "/" ^ branch_description
+    | None ->
+      print_endline "WARNING! Unknown user login";
+      branch_description
+  in
+  create_branch branch_name
 
 let push force =
   let current_branch = get_current_branch () in

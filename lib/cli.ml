@@ -34,9 +34,9 @@ let cmd_log =
 let cmd_new =
   Command.basic
     ~summary:"Create a new branch <login>/[description]"
-    (let%map_open.Command description = anon ("description" %: string) in
-      fun () ->
-        printf "git checkout -b <login>/%s\n%!" description)
+    (let%map_open.Command
+      description = anon (non_empty_sequence_as_list ("description" %: string))
+    in fun () -> Git.new_ description)
 
 let cmd_push =
   Command.basic
@@ -122,13 +122,3 @@ let command =
     ; "uncommit", cmd_uncommit
     ; "unstash", cmd_unstash
     ]
-
-(*
-TODO:
-
-- new
-
-With API:
-
-- issue
-*)

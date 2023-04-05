@@ -17,6 +17,9 @@ val commit : string -> unit
 (** Show pretty log. *)
 val log : string -> unit
 
+(** Create new branch. *)
+val new_ : string list -> unit
+
 (** Push the current branch to origin. *)
 val push : force_flag -> unit
 
