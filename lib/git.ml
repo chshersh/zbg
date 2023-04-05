@@ -34,7 +34,6 @@ let mk_branch_description (description : string list) : string =
   Extended_string.unwords description
   |> String.filter ~f:is_valid_char
   |> Extended_string.words
-  |> (fun l -> List.take l 7)
   |> String.concat ~sep:"-"
 
 (* PUBLIC API *)
