@@ -10,7 +10,7 @@
 (authors "Dmitrii Kovanikov")
 (maintainers "Dmitrii Kovanikov")
 
-(license LICENSE)
+(license MPL-2.0)
 
 (documentation https://url/to/documentation)
 
@@ -23,9 +23,9 @@
    dune
    ANSITerminal
    core
-   core_unix.command_unix
+   core_unix
    ppx_assert
-   ppx_deriving.ord
+   ppx_deriving
    ppx_inline_test
    ppx_jane
  )
