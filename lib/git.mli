@@ -1,48 +1,44 @@
 (* Set Force when [-f|--force] flag is provided *)
-type force_flag =
-    | NoForce
-    | Force
+type force_flag = NoForce | Force
 
 (* Action to do with the tag: delete or create *)
-type tag_action =
-    | Delete
-    | Create
+type tag_action = Delete | Create
 
-(** Clear all local changes unrecoverably. *)
 val clear : force_flag -> unit
+(** Clear all local changes unrecoverably. *)
 
-(** Commit all local changes. *)
 val commit : string -> unit
+(** Commit all local changes. *)
 
-(** Show pretty log. *)
 val log : string -> unit
+(** Show pretty log. *)
 
-(** Create new branch. *)
 val new_ : string list -> unit
+(** Create new branch. *)
 
-(** Push the current branch to origin. *)
 val push : force_flag -> unit
+(** Push the current branch to origin. *)
 
-(** Rebase local branch on top of origin/<branch>. *)
 val rebase : string option -> unit
+(** Rebase local branch on top of origin/<branch>. *)
 
-(** Stash all local changes. *)
 val stash : string option -> unit
+(** Stash all local changes. *)
 
-(** Show pretty status of local changes. *)
 val status : string -> unit
+(** Show pretty status of local changes. *)
 
-(** Switch to a new branch and update to the latest version of origin. *)
 val switch : string -> unit
+(** Switch to a new branch and update to the latest version of origin. *)
 
-(** Sync local branch with the remote branch. *)
 val sync : force_flag -> unit
+(** Sync local branch with the remote branch. *)
 
-(** Create or delete tag. *)
 val tag : string -> tag_action -> unit
+(** Create or delete tag. *)
 
-(** Undo last commit. *)
 val uncommit : unit -> unit
+(** Undo last commit. *)
 
-(** Unstash latest changes. *)
 val unstash : unit -> unit
+(** Unstash latest changes. *)

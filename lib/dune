@@ -1,8 +1,5 @@
 (library
  (name zbg)
- (libraries
-   ANSITerminal
-   core
-   core_unix.command_unix
- )
- (preprocess (pps ppx_jane ppx_deriving.ord)))
+ (libraries ANSITerminal core core_unix.command_unix)
+ (preprocess
+  (pps ppx_jane ppx_deriving.ord)))
