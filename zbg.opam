@@ -12,6 +12,13 @@ bug-reports: "https://github.com/chshersh/zbg/issues"
 depends: [
   "ocaml"
   "dune" {>= "3.7"}
+  "ANSITerminal"
+  "core"
+  "core_unix.command_unix"
+  "ppx_assert"
+  "ppx_deriving.ord"
+  "ppx_inline_test"
+  "ppx_jane"
   "odoc" {with-doc}
 ]
 build: [
