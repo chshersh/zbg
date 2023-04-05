@@ -18,6 +18,16 @@
  (name zbg)
  (synopsis "Zero bullshit git")
  (description "A CLI tool to use git without ceremony")
- (depends ocaml dune)
+ (depends
+   ocaml
+   dune
+   ANSITerminal
+   core
+   core_unix.command_unix
+   ppx_assert
+   ppx_deriving.ord
+   ppx_inline_test
+   ppx_jane
+ )
  (tags
   (cli tool git workflow)))
