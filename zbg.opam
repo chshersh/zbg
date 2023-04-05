@@ -4,7 +4,7 @@ synopsis: "Zero bullshit git"
 description: "A CLI tool to use git without ceremony"
 maintainer: ["Dmitrii Kovanikov"]
 authors: ["Dmitrii Kovanikov"]
-license: "LICENSE"
+license: "MPL-2.0"
 tags: ["cli" "tool" "git" "workflow"]
 homepage: "https://github.com/chshersh/zbg"
 doc: "https://url/to/documentation"
@@ -14,9 +14,9 @@ depends: [
   "dune" {>= "3.7"}
   "ANSITerminal"
   "core"
-  "core_unix.command_unix"
+  "core_unix"
   "ppx_assert"
-  "ppx_deriving.ord"
+  "ppx_deriving"
   "ppx_inline_test"
   "ppx_jane"
   "odoc" {with-doc}
