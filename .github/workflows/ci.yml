@@ -8,9 +8,9 @@ on:
 
 jobs:
   build:
+    name: ${{ matrix.os }} / OCaml ${{ matrix.ocaml-compiler }}
+    runs-on: ${{ matrix.os }}
     strategy:
-      name: ${{ matrix.os }} / OCaml ${{ matrix.ocaml-compiler }}
-      runs-on: ${{ matrix.os }}
       matrix:
         os:
           - macos-latest
