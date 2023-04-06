@@ -7,6 +7,9 @@ Also print the command with a pretty prompt.
 
 *)
 
+val proc_silent : string -> unit
+(** Like [proc] but doesn't print the specified command. *)
+
 val proc_stdout : string -> string
 (** Run a given string as an external process with arguments.
 
