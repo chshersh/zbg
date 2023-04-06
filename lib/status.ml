@@ -1,11 +1,8 @@
 open Base
 open Extended_string
-open Stdio
+open Message
 
 (* Internal functions *)
-
-let fmt (styles : ANSITerminal.style list) : string -> string =
-  ANSITerminal.sprintf styles "%s"
 
 (* Extract the length of the longest element by a given string extractor. *)
 let max_len_on : 'a. ('a -> string) -> 'a list -> int =
@@ -144,6 +141,16 @@ let get_file_statuses (commit : string) : file_status list =
   |> List.filter_map ~f:parse_diff_name_status
   |> List.sort ~compare:(fun ds1 ds2 -> String.compare ds1.file ds2.file)
 
+(* A data type for storing the diff as + and - *)
+type diff_stat = Raw of string | Signs of { pluses : int; minuses : int }
+[@@deriving sexp, ord]
+
+(* Split a single string like +++-- into (+++, --) *)
+let split_signs (signs : string) : diff_stat =
+  let pluses = String.length @@ String.rstrip ~drop:(Char.( = ) '-') signs in
+  let minuses = String.length @@ String.lstrip ~drop:(Char.( = ) '+') signs in
+  Signs { pluses; minuses }
+
 (* Output of `git diff --stat` stored in a structured way.
 
    ```
@@ -158,7 +165,7 @@ let get_file_statuses (commit : string) : file_status list =
 type diff_details = {
   file : string; (* file name *)
   change_count : string; (* number of changed lines*)
-  signs : string; (* + and - signs *)
+  stat : diff_stat;
 }
 [@@deriving sexp, ord]
 
@@ -230,12 +237,12 @@ let parse_diff_details_words (words : string list) : diff_details option =
         {
           file = expand_renamed_paths prev_file new_file;
           change_count;
-          signs = unwords rest;
+          stat = split_signs @@ unwords rest;
         }
   | file :: "Bin" :: rest ->
-      Some { file; change_count = "Bin"; signs = unwords rest }
+      Some { file; change_count = "Bin"; stat = Raw (unwords rest) }
   | file :: change_count :: signs ->
-      Some { file; change_count; signs = String.concat signs }
+      Some { file; change_count; stat = split_signs @@ String.concat signs }
   | _ -> None
 
 (* Parses a single line from the `git diff --stat` output.
@@ -279,14 +286,15 @@ let parse_diff_details (stat_line : string) : diff_details option =
 let get_file_diff_stat ~(commit : string) ~(file : string) : diff_details =
   let diff_stat =
     Process.proc_stdout
-    @@ Printf.sprintf "git diff %s --stat --color=always -- %s" commit file
+    @@ Printf.sprintf "git diff %s --stat --color=never -- %s" commit file
   in
   match String.split_lines diff_stat with
   | stat_line :: _ ->
       Option.value
         (parse_diff_details stat_line)
-        ~default:{ file; change_count = "0"; signs = "<unable to parse stat>" }
-  | _ -> { file; change_count = "0"; signs = "<unable to match file>" }
+        ~default:
+          { file; change_count = "0"; stat = Raw "<unable to parse stat>" }
+  | _ -> { file; change_count = "0"; stat = Raw "<unable to match file>" }
 
 (* Return `true` if `git rebase` is currently in progress. *)
 let is_rebase_in_progress () : bool =
@@ -334,7 +342,7 @@ type change_summary = {
   patch_type : string;
   file : string;
   change_count : string;
-  signs : string;
+  diff_stat : diff_stat;
 }
 
 let fmt_diff_stats (change_summaries : change_summary list) : string =
@@ -344,11 +352,29 @@ let fmt_diff_stats (change_summaries : change_summary list) : string =
     max_len_on (fun x -> x.change_count) change_summaries
   in
 
+  let open ANSITerminal in
+  let format_diff_stat = function
+    | Raw str -> fmt [ cyan ] str
+    | Signs signs ->
+        let pluses =
+          fmt [ green ]
+          @@ String.concat
+          @@ List.init signs.pluses ~f:(fun _ -> "\u{25A0}")
+        in
+        let minuses =
+          fmt [ red ]
+          @@ String.concat
+          @@ List.init signs.minuses ~f:(fun _ -> "\u{25A0}")
+        in
+        pluses ^ minuses
+  in
+
   let format_row (change : change_summary) =
     let patch_type = fill_right patch_type_size change.patch_type in
     let file = fill_right file_size change.file in
     let change_count = fill_left change_count_size change.change_count in
-    Printf.sprintf "%s  %s | %s %s" patch_type file change_count change.signs
+    let stat = format_diff_stat change.diff_stat in
+    Printf.sprintf "%s  %s | %s %s" patch_type file change_count stat
   in
 
   unlines (List.map ~f:format_row change_summaries)
@@ -361,7 +387,7 @@ let print_file_statuses commit (file_statuses : file_status list) =
           patch_type = display_patch_type file_status.patch_type;
           file = diff_details.file;
           change_count = diff_details.change_count;
-          signs = diff_details.signs;
+          diff_stat = diff_details.stat;
         })
   in
   Core.print_endline (fmt_diff_stats change_summaries)
@@ -382,7 +408,7 @@ let show_pretty_diff (commit : string) : unit =
     show_conflict_files ());
   let file_statuses = get_file_statuses commit in
   match file_statuses with
-  | [] -> print_endline @@ fmt [ ANSITerminal.green ] "No changes to commit!"
+  | [] -> success "No changes to commit!"
   | file_statuses -> print_file_statuses commit file_statuses
 
 let status commit =

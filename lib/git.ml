@@ -1,5 +1,4 @@
 open Base
-open Stdio
 
 (* INTERNALS *)
 
@@ -50,18 +49,18 @@ let clear force =
   in
 
   let prompt =
-    "⚠️  'zbg clear' deletes all uncommited changes !!! PERMANENTLY !!!\n\
-    \   Hint: If you want to recover them later, use 'zbg stash' instead.\n\
-    \   Are you sure you to delete all uncommited changes? (y/N)\n"
+    "'zbg clear' deletes all uncommited changes !!! PERMANENTLY !!!\n\
+    \   HINT: If you want to recover them later, use 'zbg stash' instead.\n\
+    \   Are you sure you to delete all uncommited changes? (y/N)"
   in
 
   match force with
   | Force -> clear_changes ()
   | NoForce -> (
-      printf "%s%!" prompt;
+      Message.warning prompt;
       let open Prompt in
       match yesno ~def:No with
-      | No -> print_endline "Aborting 'zbg clear'"
+      | No -> Message.info "Aborting 'zbg clear'"
       | Yes -> clear_changes ())
 
 let commit message_words =
@@ -99,7 +98,11 @@ let new_ description =
     match get_login () with
     | Some login -> login ^ "/" ^ branch_description
     | None ->
-        print_endline "WARNING! Unknown user login";
+        let warning_msg =
+          "Unknown user login! Set it globally via:\n\n\
+          \    git config --global user.login <your_github_username>"
+        in
+        Message.warning warning_msg;
         branch_description
   in
   create_branch branch_name
@@ -119,7 +122,6 @@ let rebase branch_opt =
   let branch = branch_or_main branch_opt in
   Process.proc @@ Printf.sprintf "git fetch origin %s" branch;
   Process.proc @@ Printf.sprintf "git rebase origin/%s" branch
-(* TODO: handle failed rebase *)
 
 let stash msg_opt =
   let msg_arg =
