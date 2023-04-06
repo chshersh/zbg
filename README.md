@@ -17,13 +17,6 @@
 
 > **Note**
 >
-> `zbg` is not a full `git` replacement!
->
-> `zbg` provides helpful commands for the most
-> common use case but you may still need to use some `git` commands occasionally
-
-> **Note**
->
 > `zbg` is developed and maintained in free time
 > by volunteers. The development may continue for decades or may stop
 > tomorrow. You can use
@@ -148,6 +141,11 @@ The following tables provides the comparison of `zbg` and `git` outputs.
 | ----- | ----- |
 | `zbg status` <br /> ![zbg status](./images/zbg-status-comparison.png) | `git status` <br /> ![git status](./images/git-status-comparison.png) |
 | `zbg log` <br /> ![zbg log](./images/zbg-log-comparison.png) | `git log` <br /> ![git log](./images/git-log-comparison.png) |
+
+> **Warning**
+>
+> `zbg` is not a full `git` replacement! It provides a streamlined workflow for
+the most common case but you may still need to use `git` occasionaly.
 
 ## For contributors
 
