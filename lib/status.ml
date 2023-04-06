@@ -1,5 +1,6 @@
 open Base
 open Extended_string
+open Stdio
 
 (* Internal functions *)
 
@@ -352,6 +353,19 @@ let fmt_diff_stats (change_summaries : change_summary list) : string =
 
   unlines (List.map ~f:format_row change_summaries)
 
+let print_file_statuses commit (file_statuses : file_status list) =
+  let change_summaries =
+    List.map file_statuses ~f:(fun file_status ->
+        let diff_details = get_file_diff_stat ~commit ~file:file_status.file in
+        {
+          patch_type = display_patch_type file_status.patch_type;
+          file = diff_details.file;
+          change_count = diff_details.change_count;
+          signs = diff_details.signs;
+        })
+  in
+  Core.print_endline (fmt_diff_stats change_summaries)
+
 (* Show pretty diff in the following format:
 
    ```
@@ -367,17 +381,9 @@ let show_pretty_diff (commit : string) : unit =
     Core.print_endline git_rebase_help;
     show_conflict_files ());
   let file_statuses = get_file_statuses commit in
-  let change_summaries =
-    List.map file_statuses ~f:(fun file_status ->
-        let diff_details = get_file_diff_stat ~commit ~file:file_status.file in
-        {
-          patch_type = display_patch_type file_status.patch_type;
-          file = diff_details.file;
-          change_count = diff_details.change_count;
-          signs = diff_details.signs;
-        })
-  in
-  Core.print_endline (fmt_diff_stats change_summaries)
+  match file_statuses with
+  | [] -> print_endline @@ fmt [ ANSITerminal.green ] "No changes to commit!"
+  | file_statuses -> print_file_statuses commit file_statuses
 
 let status commit =
   with_deleted_files (fun () ->
