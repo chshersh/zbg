@@ -52,25 +52,63 @@ let%test_unit "expand_renamed_statuses_parent+suffix_empty_second" =
     (Status.expand_renamed_paths "test/{bar" "}/baz")
     "test/bar/baz => test/baz"
 
+(* diff_stat *)
+
+let%test_unit "split_signs_both" =
+  [%test_eq: Status.diff_stat]
+    (Status.split_signs "+++--")
+    (Signs { pluses = 3; minuses = 2 })
+
+let%test_unit "split_signs_only_pluses" =
+  [%test_eq: Status.diff_stat] (Status.split_signs "+++")
+    (Signs { pluses = 3; minuses = 0 })
+
+let%test_unit "split_signs_only_minuses" =
+  [%test_eq: Status.diff_stat] (Status.split_signs "--")
+    (Signs { pluses = 0; minuses = 2 })
+
+let%test_unit "split_signs_empty" =
+  [%test_eq: Status.diff_stat] (Status.split_signs "")
+    (Signs { pluses = 0; minuses = 0 })
+
 (* parse_diff_details *)
 
 let%test_unit "parse_diff_details_simple" =
   [%test_eq: Status.diff_details option]
     (Status.parse_diff_details "pancake                |   4 ++--")
-    (Some { file = "pancake"; change_count = "4"; signs = "++--" })
+    (Some
+       {
+         file = "pancake";
+         change_count = "4";
+         stat = Signs { pluses = 2; minuses = 2 };
+       })
 
 let%test_unit "parse_diff_details_rename" =
   [%test_eq: Status.diff_details option]
     (Status.parse_diff_details "test/{st => org/st}    |   2 --")
-    (Some { file = "test/st => test/org/st"; change_count = "2"; signs = "--" })
+    (Some
+       {
+         file = "test/st => test/org/st";
+         change_count = "2";
+         stat = Signs { pluses = 0; minuses = 2 };
+       })
 
 let%test_unit "parse_diff_details_no_signs" =
   [%test_eq: Status.diff_details option]
     (Status.parse_diff_details " test/zbg.ml   | 0")
-    (Some { file = "test/zbg.ml"; change_count = "0"; signs = "" })
+    (Some
+       {
+         file = "test/zbg.ml";
+         change_count = "0";
+         stat = Signs { pluses = 0; minuses = 0 };
+       })
 
 let%test_unit "parse_diff_details_binary" =
   [%test_eq: Status.diff_details option]
     (Status.parse_diff_details ".pancake.un~           | Bin 0 -> 412 bytes")
     (Some
-       { file = ".pancake.un~"; change_count = "Bin"; signs = "0 -> 412 bytes" })
+       {
+         file = ".pancake.un~";
+         change_count = "Bin";
+         stat = Raw "0 -> 412 bytes";
+       })
