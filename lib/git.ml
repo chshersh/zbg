@@ -85,7 +85,7 @@ let log commit =
      <%ae>%n       %C(bold blue)Date%C(reset): %cd%n"
   in
   let date_format = "%d %b %Y %H:%M:%S %z" in
-  Process.proc
+  Process.proc_silent
   @@ Printf.sprintf "git log --date='format:%s' --format='format: %s' %s"
        date_format log_format commit
 

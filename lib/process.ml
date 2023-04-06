@@ -1,7 +1,10 @@
-let proc cmd =
-  Printf.eprintf "🐚  %s\n%!" cmd;
+let proc_silent cmd =
   let _exit_code = Unix.system cmd in
   ()
+
+let proc cmd =
+  Printf.eprintf "🐚  %s\n%!" cmd;
+  proc_silent cmd
 
 let collect_chan (channel : in_channel) : string =
   let rec loop acc =
