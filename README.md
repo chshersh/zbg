@@ -16,10 +16,19 @@
 | ![zbg status](./images/zbg-status-demo.png) | ![zbg log](./images/zbg-log-demo.png) |
 
 > **Note**
+>
 > `zbg` is not a full `git` replacement!
 >
 > `zbg` provides helpful commands for the most
 > common use case but you may still need to use some `git` commands occasionally
+
+> **Note**
+>
+> `zbg` is developed and maintained in free time
+> by volunteers. The development may continue for decades or may stop
+> tomorrow. You can use
+> [GitHub Sponsorship](https://github.com/sponsors/chshersh) to support
+> the development of this project.
 
 ## Install
 
@@ -112,6 +121,7 @@ The below table describes all `zbg` commands and the corresponding `git`
 explanations.
 
 > **Note**
+>
 > The table below uses default or example arguments to all commands
 
 | `zbg` | `git` |
@@ -182,12 +192,3 @@ run the following command to sync with the remote and set the `origin/HEAD` ref 
 ```shell
 git remote set-head origin -a
 ```
-
-## Acknowledgement
-
-> **Note**
-> `zbg` is developed and maintained in free time
-> by volunteers. The development may continue for decades or may stop
-> tomorrow. You can use
-> [GitHub Sponsorship](https://github.com/sponsors/chshersh) to support
-> the development of this project.
