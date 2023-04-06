@@ -374,7 +374,7 @@ let fmt_diff_stats (change_summaries : change_summary list) : string =
     let file = fill_right file_size change.file in
     let change_count = fill_left change_count_size change.change_count in
     let stat = format_diff_stat change.diff_stat in
-    Printf.sprintf "%s  %s | %s %s" patch_type file change_count stat
+    Printf.sprintf " %s  %s | %s %s" patch_type file change_count stat
   in
 
   unlines (List.map ~f:format_row change_summaries)

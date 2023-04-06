@@ -5,19 +5,17 @@
 
 `zbg` (short for **Z**ero **B**ullshit **G**it) is a CLI tool for using `git` efficiently.
 
-> ℹ️ **DISCLAIMER:** `zbg` is developed and maintained in free time
-> by volunteers. The development may continue for decades or may stop
-> tomorrow. You can use
-> [GitHub Sponsorship](https://github.com/sponsors/chshersh) to support
-> the development of this project.
-
 ## Features
 
 * ✨ Prettier `git status`, `git log` and other commands
 * 🚀 Sane defaults to `git` commands that enforce good state of your local repository
 * 🌌 Achieving more by typing less
 
-> **Warning**
+| `zbg status` | `zbg log` |
+| --- | --- |
+| ![zbg status](./images/zbg-status-demo.png) | ![zbg log](./images/zbg-log-demo.png) |
+
+> **Note**
 > `zbg` is not a full `git` replacement!
 >
 > `zbg` provides helpful commands for the most
@@ -134,6 +132,13 @@ explanations.
 | `zbg uncommit` | `git reset HEAD~1` |
 | `zbg unstash` | `git stash pop` |
 
+The following tables provides the comparison of `zbg` and `git` outputs.
+
+| `zbg` | `git` |
+| ----- | ----- |
+| `zbg status` <br /> ![zbg status](./images/zbg-status-comparison.png) | `git status` <br /> ![git status](./images/git-status-comparison.png) |
+| `zbg log` <br /> ![zbg log](./images/zbg-log-comparison.png) | `git log` <br /> ![git log](./images/git-log-comparison.png) |
+
 ## For contributors
 
 Check [CONTRIBUTING.md](https://github.com/chshersh/zbg/blob/main/CONTRIBUTING.md)
@@ -177,3 +182,12 @@ run the following command to sync with the remote and set the `origin/HEAD` ref 
 ```shell
 git remote set-head origin -a
 ```
+
+## Acknowledgement
+
+> **Note**
+> `zbg` is developed and maintained in free time
+> by volunteers. The development may continue for decades or may stop
+> tomorrow. You can use
+> [GitHub Sponsorship](https://github.com/sponsors/chshersh) to support
+> the development of this project.
