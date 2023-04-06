@@ -20,7 +20,7 @@ let cmd_clear =
 
 let cmd_commit =
   Command.basic ~summary:"Commit all local changes"
-    (let%map_open.Command message = anon ("message" %: string) in
+    (let%map_open.Command message = anon (sequence ("message" %: string)) in
      fun () -> Git.commit message)
 
 let cmd_log =

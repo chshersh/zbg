@@ -7,7 +7,7 @@ type tag_action = Delete | Create
 val clear : force_flag -> unit
 (** Clear all local changes unrecoverably. *)
 
-val commit : string -> unit
+val commit : string list -> unit
 (** Commit all local changes. *)
 
 val log : string -> unit
