@@ -67,7 +67,9 @@ let clear force =
 let commit message_words =
   let message = Extended_string.unwords message_words in
   Process.proc "git add .";
-  Process.proc @@ Printf.sprintf "git commit --message=\"%s\"" message
+  match message with
+  | "" -> Process.proc "git commit"
+  | message -> Process.proc @@ Printf.sprintf "git commit --message=\"%s\"" message
 (* TODO: Escape quotes in message *)
 
 let log commit =
