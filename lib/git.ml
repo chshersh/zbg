@@ -68,9 +68,7 @@ let commit message_words =
   Process.proc "git add .";
   match message with
   | "" -> Process.proc "git commit"
-  | message ->
-      Process.proc @@ Printf.sprintf "git commit --message=\"%s\"" message
-(* TODO: Escape quotes in message *)
+  | message -> Process.proc @@ Printf.sprintf "git commit --message=%S" message
 
 let log commit =
   (* Log format is:
@@ -127,8 +125,7 @@ let stash msg_opt =
   let msg_arg =
     match msg_opt with
     | None -> ""
-    | Some msg ->
-        Printf.sprintf "--message='%s'" msg (* TODO: proper escaping *)
+    | Some msg -> Printf.sprintf "--message=%S" msg
   in
   Process.proc @@ Printf.sprintf "git stash push --include-untracked %s" msg_arg
 
