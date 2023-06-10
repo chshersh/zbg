@@ -283,10 +283,15 @@ let parse_diff_details (stat_line : string) : diff_details option =
     1 file changed, 5 insertions(+), 6 deletions(-)
    ```
 *)
+
+let get_git_base_dir =
+  Process.proc_stdout "git rev-parse --show-toplevel"
+  |> String.rstrip ~drop:(fun c -> Char.( = ) c '\n')
+
 let get_file_diff_stat ~(commit : string) ~(file : string) : diff_details =
   let diff_stat =
     Process.proc_stdout
-    @@ Printf.sprintf "git diff %s --stat --color=never -- %s" commit file
+    @@ Printf.sprintf "git diff %s --stat --color=never -- %s" commit (get_git_base_dir ^ "/" ^ file)
   in
   match String.split_lines diff_stat with
   | stat_line :: _ ->
