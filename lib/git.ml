@@ -131,7 +131,8 @@ let stash msg_opt =
 
 let status = Status.status
 
-let switch branch =
+let switch branch_opt =
+  let branch = branch_or_main branch_opt in
   Process.proc @@ Printf.sprintf "git checkout %s" branch;
   Process.proc "git pull --ff-only --prune"
 

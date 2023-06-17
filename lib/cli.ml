@@ -63,9 +63,7 @@ let cmd_status =
 
 let cmd_switch =
   Command.basic ~summary:"Switch to [branch] and sync it with origin"
-    (let%map_open.Command branch =
-       anon (maybe_with_default "main" ("branch" %: string))
-     in
+    (let%map_open.Command branch = anon (maybe ("branch" %: string)) in
      fun () -> Git.switch branch)
 
 let cmd_sync =
