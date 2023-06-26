@@ -14,7 +14,8 @@ let cmd_clear =
   Command.basic
     ~summary:"Clear all local changes without the ability to recover"
     (let%map_open.Command force =
-       flag "f" no_arg ~doc:"Clear forcefully without asking any questions"
+       flag "f" ~aliases:[ "--force" ] no_arg
+         ~doc:"Clear forcefully without asking any questions"
      in
      fun () -> Git.clear (to_force_flag force))
 
@@ -40,7 +41,8 @@ let cmd_new =
 let cmd_push =
   Command.basic ~summary:"Push the current branch to origin"
     (let%map_open.Command force =
-       flag "f" no_arg ~doc:"Push forcefully and override changes"
+       flag "f" ~aliases:[ "--force" ] no_arg
+         ~doc:"Push forcefully and override changes"
      in
      fun () -> Git.push (to_force_flag force))
 
@@ -63,15 +65,13 @@ let cmd_status =
 
 let cmd_switch =
   Command.basic ~summary:"Switch to [branch] and sync it with origin"
-    (let%map_open.Command branch =
-       anon (maybe_with_default "main" ("branch" %: string))
-     in
+    (let%map_open.Command branch = anon (maybe ("branch" %: string)) in
      fun () -> Git.switch branch)
 
 let cmd_sync =
   Command.basic ~summary:"Sync local branch with the remote branch"
     (let%map_open.Command force =
-       flag "f" no_arg
+       flag "f" ~aliases:[ "--force" ] no_arg
          ~doc:
            "Sync forcefully by overriding local version with the remote one \
             instead of rebasing"

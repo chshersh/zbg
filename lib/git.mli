@@ -28,7 +28,7 @@ val stash : string option -> unit
 val status : string -> unit
 (** Show pretty status of local changes. *)
 
-val switch : string -> unit
+val switch : string option -> unit
 (** Switch to a new branch and update to the latest version of origin. *)
 
 val sync : force_flag -> unit
