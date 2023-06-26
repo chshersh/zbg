@@ -221,7 +221,7 @@ let expand_renamed_paths (left : string) (right : string) : string =
   let append_path (p1 : string) (p2 : string) =
     if String.is_empty p1 then p2
     else if String.is_empty p2 then p1
-    else if Char.( = ) p1.[String.length p1 - 1] '/' && Caml.( == ) p2.[0] '/'
+    else if Char.( = ) p1.[String.length p1 - 1] '/' && Stdlib.( == ) p2.[0] '/'
     then p1 ^ String.drop_prefix p2 1
     else p1 ^ p2
   in
@@ -291,7 +291,8 @@ let get_git_base_dir =
 let get_file_diff_stat ~(commit : string) ~(file : string) : diff_details =
   let diff_stat =
     Process.proc_stdout
-    @@ Printf.sprintf "git diff %s --stat --color=never -- %s" commit (get_git_base_dir ^ "/" ^ file)
+    @@ Printf.sprintf "git diff %s --stat --color=never -- %s" commit
+         (get_git_base_dir ^ "/" ^ file)
   in
   match String.split_lines diff_stat with
   | stat_line :: _ ->
