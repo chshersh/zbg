@@ -75,6 +75,8 @@ $ zbg status           # Check quick summary of your changes
 $ zbg commit           # Commit all local changes and write description
 
 $ zbg push             # Push the branch
+
+$ zbg done             # Switch to the main branch and delete the feature branch locally
 ```
 
 ### Experimenting, saving and re-applying
@@ -121,6 +123,7 @@ explanations.
 | ----- | ----- |
 | `zbg clear` | `git add .` <br /> `git reset --hard` |
 | `zbg commit My description` | `git add .` <br /> `git commit --message="My description"` |
+| `zbg done` | `git checkout main` <br /> `git branch -d <branch we're switching from>` |
 | `zbg log` | `git log <long custom formatting string>` |
 | `zbg new Branch name` | `git checkout -b my-github-username/Branch-name` |
 | `zbg push` | `git push --set-upstream origin <current-branch>` |
