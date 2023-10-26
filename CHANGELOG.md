@@ -19,6 +19,7 @@ Initial release prepared by [@chshersh].
 <!-- Contributors -->
 
 [@chshersh]: https://github.com/chshersh
+[@sloboegen]: https://github.com/sloboegen
 
 <!-- Header links -->
 
