@@ -168,6 +168,6 @@ let unstash () = Process.proc "git stash pop"
 let done_ () =
   let prev_branch = get_current_branch () in
   let main_branch = fetch_main_branch () in
-  switch None;
+  switch (Some main_branch);
   if String.( <> ) prev_branch main_branch then
     Process.proc @@ Printf.sprintf "git branch -d %s" prev_branch
