@@ -10,6 +10,8 @@ available [on GitHub][2].
 
 <!-- Add new changes here -->
 
+`done` command has been added by [@sloboegen].
+
 ## [0.1.0] — 2023-04-10 🌇
 
 Initial release prepared by [@chshersh].
@@ -17,6 +19,7 @@ Initial release prepared by [@chshersh].
 <!-- Contributors -->
 
 [@chshersh]: https://github.com/chshersh
+[@sloboegen]: https://github.com/sloboegen
 
 <!-- Header links -->
 

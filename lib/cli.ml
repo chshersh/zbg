@@ -24,6 +24,10 @@ let cmd_commit =
     (let%map_open.Command message = anon (sequence ("message" %: string)) in
      fun () -> Git.commit message)
 
+let cmd_done =
+  Command.basic ~summary:"Switch to the main branch and delete the previous one"
+    (Command.Param.return Git.done_)
+
 let cmd_log =
   Command.basic ~summary:"Show pretty log"
     (let%map_open.Command commit =
@@ -99,6 +103,7 @@ let command =
     [
       ("clear", cmd_clear);
       ("commit", cmd_commit);
+      ("done", cmd_done);
       ("log", cmd_log);
       ("new", cmd_new);
       ("push", cmd_push);

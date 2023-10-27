@@ -164,3 +164,10 @@ let tag tag_name tag_action =
 
 let uncommit () = Process.proc "git reset HEAD~1"
 let unstash () = Process.proc "git stash pop"
+
+let done_ () =
+  let prev_branch = get_current_branch () in
+  let main_branch = fetch_main_branch () in
+  switch (Some main_branch);
+  if String.( <> ) prev_branch main_branch then
+    Process.proc @@ Printf.sprintf "git branch --delete %s" prev_branch

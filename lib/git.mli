@@ -10,6 +10,9 @@ val clear : force_flag -> unit
 val commit : string list -> unit
 (** Commit all local changes. *)
 
+val done_ : unit -> unit
+(** Switch to the main branch and delete the previous one. *)
+
 val log : string -> unit
 (** Show pretty log. *)
 
