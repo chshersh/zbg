@@ -15,8 +15,7 @@
 | --- | --- |
 | ![zbg status](./images/zbg-status-demo.png) | ![zbg log](./images/zbg-log-demo.png) |
 
-> **Note**
->
+> [!IMPORTANT]
 > `zbg` is developed and maintained in free time
 > by volunteers. The development may continue for decades or may stop
 > tomorrow. You can use
@@ -25,7 +24,8 @@
 
 ## Install
 
-> ℹ️ Currently `zbg` can be installed only by building it [from sources](#from-sources).
+> [!NOTE]
+> Currently `zbg` can be installed only by building it [from sources](#from-sources).
 > Alternative installation methods [may appear later](https://github.com/chshersh/zbg/issues/8).
 
 ### From sources
@@ -56,7 +56,7 @@ git config --global user.login my-github-login
 
 ## Quick start guide
 
-This section contains example of various usage scenarios for `zbg`.
+This section contains examples of various usage scenarios for `zbg`.
 
 ### Developing a new feature
 
@@ -66,13 +66,13 @@ A typical workflow for developing a new feature may look like this:
 $ zbg switch           # Switch to the main branch and  sync it
 
 $ zbg new Feature 2.0  # Create a new branch; 'zbg switch' made sure
-                       # we start developing from the latest version
+                       # to start developing from the latest version
 
 <coding>               # The fun part!
 
-$ zbg status           # Check quick summary of your changes
+$ zbg status           # Check a quick summary of your changes
 
-$ zbg commit           # Commit all local changes and write description
+$ zbg commit           # Commit all local changes and write a description
 
 $ zbg push             # Push the branch
 
@@ -115,8 +115,7 @@ $ zbg push -f  # Push changes for the review
 The below table describes all `zbg` commands and the corresponding `git`
 explanations.
 
-> **Note**
->
+> [!NOTE]
 > The table below uses default or example arguments to all commands
 
 | `zbg` | `git` |
@@ -138,17 +137,16 @@ explanations.
 | `zbg uncommit` | `git reset HEAD~1` |
 | `zbg unstash` | `git stash pop` |
 
-The following tables provides the comparison of `zbg` and `git` outputs.
+The following table provides the comparison of `zbg` and `git` outputs.
 
 | `zbg` | `git` |
 | ----- | ----- |
 | `zbg status` <br /> ![zbg status](./images/zbg-status-comparison.png) | `git status` <br /> ![git status](./images/git-status-comparison.png) |
 | `zbg log` <br /> ![zbg log](./images/zbg-log-comparison.png) | `git log` <br /> ![git log](./images/git-log-comparison.png) |
 
-> **Warning**
->
+> [!WARNING]
 > `zbg` is not a full `git` replacement! It provides a streamlined workflow for
-the most common case but you may still need to use `git` occasionaly.
+the most common case but you may still need to use `git` occasionally.
 
 ## For contributors
 
@@ -175,6 +173,7 @@ To run tests:
 dune runtest
 ```
 
+> [!TIP]
 > Empty output means that all tests are passing.
 
 ## Troubleshooting
