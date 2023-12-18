@@ -110,7 +110,7 @@ let push force =
   let flag_option =
     match force with
     | NoForce -> ""
-    | Force -> "--force"
+    | Force -> "--force-with-lease"
   in
   Process.proc
   @@ Printf.sprintf "git push --set-upstream origin %s %s" current_branch

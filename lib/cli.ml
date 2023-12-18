@@ -45,7 +45,7 @@ let cmd_new =
 let cmd_push =
   Command.basic ~summary:"Push the current branch to origin"
     (let%map_open.Command force =
-       flag "f" ~aliases:[ "--force" ] no_arg
+       flag "f" ~aliases:[ "--force-with-lease" ] no_arg
          ~doc:"Push forcefully and override changes"
      in
      fun () -> Git.push (to_force_flag force))
