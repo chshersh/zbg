@@ -9,6 +9,11 @@ available [on GitHub][2].
 ## [Unreleased]
 
 <!-- Add new changes here -->
+### Fixed
+
+- [#26](https://github.com/chshersh/zbg/issues/26):
+  Set the `HOME` environment variable before calling external commands.
+  (by [@etorreborre])
 
 ### Changed
 - [#31](https://github.com/chshersh/zbg/pull/31):

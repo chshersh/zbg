@@ -19,11 +19,7 @@ let branch_or_main (branch_opt : string option) : string =
 
 (* Read user login from user.login in git config. *)
 let get_login () : string option =
-  let home_dir = Unix.getenv "HOME" in
-  let login =
-    Process.proc_stdout
-    @@ Printf.sprintf "HOME=%s git config user.login" home_dir
-  in
+  let login = Process.proc_stdout "git config user.login" in
   if String.is_empty login then None else Some login
 
 let mk_branch_description (description : string list) : string =
