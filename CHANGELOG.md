@@ -10,6 +10,11 @@ available [on GitHub][2].
 
 <!-- Add new changes here -->
 
+### Changed
+- [#31](https://github.com/chshersh/zbg/pull/31):
+  Command `zbg push -f` now uses git's `--force-with-lease` because it's a safer default
+  (by [@kephas])
+
 ## [0.2.0] — 2023-12-17 🎄
 
 ### Added
@@ -44,6 +49,7 @@ Initial release prepared by [@chshersh].
 [@paulpatault]: https://github.com/paulpatault
 [@sloboegen]: https://github.com/sloboegen
 [@tekknoid]: https://github.com/tekknoid
+[@kephas]: https://github.com/kephas
 
 <!-- Header links -->
 
