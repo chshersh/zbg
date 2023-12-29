@@ -19,6 +19,9 @@ available [on GitHub][2].
 - [#31](https://github.com/chshersh/zbg/pull/31):
   Command `zbg push -f` now uses git's `--force-with-lease` because it's a safer default
   (by [@kephas])
+-[#10](https://github.com/chshersh/zbg/issues/10):
+  Changed `fetch_main_branch` to get the base name using `Core.Filename.basename` rather than reading the output of the `basename` command.
+  (by [@LeedsJohn])
 
 ## [0.2.0] — 2023-12-17 🎄
 
