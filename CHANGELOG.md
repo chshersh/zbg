@@ -21,7 +21,7 @@ available [on GitHub][2].
   (by [@kephas])
 -[#10](https://github.com/chshersh/zbg/issues/10):
   Changed `fetch_main_branch` to get the base name using `Core.Filename.basename` rather than reading the output of the `basename` command.
-  (by [@LeedsJohn])
+  (by [@leedsjohn])
 
 ## [0.2.0] — 2023-12-17 🎄
 
@@ -54,6 +54,7 @@ Initial release prepared by [@chshersh].
 <!-- Contributors -->
 
 [@chshersh]: https://github.com/chshersh
+[@leedsjohn]: https://github.com/leedsjohn
 [@paulpatault]: https://github.com/paulpatault
 [@sloboegen]: https://github.com/sloboegen
 [@tekknoid]: https://github.com/tekknoid
