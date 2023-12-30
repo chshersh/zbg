@@ -9,8 +9,7 @@ let fetch_main_branch () : string =
   let remote_main_branch =
     Process.proc_stdout "git rev-parse --abbrev-ref origin/HEAD"
   in
-  Process.proc_stdout @@ Printf.sprintf "basename %s" remote_main_branch
-(* TODO: use pure function *)
+  Core.Filename.basename remote_main_branch
 
 let branch_or_main (branch_opt : string option) : string =
   match branch_opt with
