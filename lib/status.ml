@@ -134,6 +134,11 @@ let parse_diff_name_status (status : string) : file_status option =
           { patch_type; file = unwords files })
   | _ -> None
 
+(* Get a list of all staged files *)
+let get_staged_files (commit : string) : string list =
+  Process.proc_stdout (Printf.sprintf "git diff --name-only --cached %s" commit)
+  |> String.split_lines
+
 (* Get the list of all changed files and their change statuses. *)
 let get_file_statuses (commit : string) : file_status list =
   Process.proc_stdout (Printf.sprintf "git diff --name-status %s" commit)
@@ -351,7 +356,8 @@ type change_summary = {
   diff_stat : diff_stat;
 }
 
-let fmt_diff_stats (change_summaries : change_summary list) : string =
+let fmt_diff_stats (change_summaries : change_summary list)
+    (staged_files : string list) : string =
   let patch_type_size = max_len_on (fun x -> x.patch_type) change_summaries in
   let file_size = max_len_on (fun x -> x.file) change_summaries in
   let change_count_size =
@@ -374,10 +380,19 @@ let fmt_diff_stats (change_summaries : change_summary list) : string =
         in
         pluses ^ minuses
   in
-
+  let format_file file : string =
+    (* the string must be filled prior to formatting the color because
+       if fill_right is given a bold green string,
+       1) String.length will not return the correct number of characters
+       2) String.make will fail and crash *)
+    let formatted_file = fill_right file_size file in
+    if List.mem staged_files file ~equal:String.equal then
+      fmt [ green; Bold ] formatted_file
+    else formatted_file
+  in
   let format_row (change : change_summary) =
     let patch_type = fill_right patch_type_size change.patch_type in
-    let file = fill_right file_size change.file in
+    let file = format_file change.file in
     let change_count = fill_left change_count_size change.change_count in
     let stat = format_diff_stat change.diff_stat in
     Printf.sprintf " %s  %s | %s %s" patch_type file change_count stat
@@ -385,7 +400,8 @@ let fmt_diff_stats (change_summaries : change_summary list) : string =
 
   unlines (List.map ~f:format_row change_summaries)
 
-let print_file_statuses commit (file_statuses : file_status list) =
+let print_file_statuses commit (file_statuses : file_status list)
+    (staged_files : string list) =
   let change_summaries =
     List.map file_statuses ~f:(fun file_status ->
         let diff_details = get_file_diff_stat ~commit ~file:file_status.file in
@@ -396,7 +412,7 @@ let print_file_statuses commit (file_statuses : file_status list) =
           diff_stat = diff_details.stat;
         })
   in
-  Core.print_endline (fmt_diff_stats change_summaries)
+  Core.print_endline (fmt_diff_stats change_summaries staged_files)
 
 (* Show pretty diff in the following format:
 
@@ -406,8 +422,10 @@ let print_file_statuses commit (file_statuses : file_status list) =
    ```
 
    **NOTE:** Assumes that all deleted and new files are staged.
+   If you would like to apply a special format to staged files, you must pass
+   a list of the staged files.
 *)
-let show_pretty_diff (commit : string) : unit =
+let show_pretty_diff (commit : string) (staged_files : string list) : unit =
   (* Show rebase help message if rebase is currently in progress *)
   if is_rebase_in_progress () then (
     Core.print_endline git_rebase_help;
@@ -415,8 +433,12 @@ let show_pretty_diff (commit : string) : unit =
   let file_statuses = get_file_statuses commit in
   match file_statuses with
   | [] -> success "No changes to commit!"
-  | file_statuses -> print_file_statuses commit file_statuses
+  | file_statuses -> print_file_statuses commit file_statuses staged_files
 
 let status commit =
+  (* Staged files are generated here and passed along rather than being
+     generated where they are used for formatting because all deleted and
+     untracked files are temporarily staged when calling show_pretty_diff. *)
+  let staged_files = get_staged_files commit in
   with_deleted_files (fun () ->
-      with_untracked_files (fun () -> show_pretty_diff commit))
+      with_untracked_files (fun () -> show_pretty_diff commit staged_files))
