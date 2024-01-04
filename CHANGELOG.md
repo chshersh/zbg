@@ -22,6 +22,9 @@ available [on GitHub][2].
 -[#10](https://github.com/chshersh/zbg/issues/10):
   Changed `fetch_main_branch` to get the base name using `Core.Filename.basename` rather than reading the output of the `basename` command.
   (by [@leedsjohn])
+- [#16](https://github.com/chshersh/zbg/issues/16):
+  `zbg status` now highlights staged files by making the file name bold and green.
+  (by [@leedsjohn])
 
 ## [0.2.0] — 2023-12-17 🎄
 
