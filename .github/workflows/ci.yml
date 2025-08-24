@@ -16,14 +16,14 @@ jobs:
           - macos-latest
           - ubuntu-latest
         ocaml-compiler:
-          - 5.0.0
+          - 5.3.0
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Use OCaml ${{ matrix.ocaml-compiler }}
-        uses: ocaml/setup-ocaml@v2
+        uses: ocaml/setup-ocaml@v3
         with:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
 
@@ -33,38 +33,32 @@ jobs:
 
       - run: opam exec -- dune runtest
 
-      - name: Upload the build artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.os }}-${{ matrix.ocaml-version }}-world.exe
-          path: _build/default/world.exe
-
   lint-doc:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
-      - name: Use OCaml 5.0.0
-        uses: ocaml/setup-ocaml@v2
+      - name: Setup OCaml
+        uses: ocaml/setup-ocaml@v3
         with:
-          ocaml-compiler: 5.0.0
+          ocaml-compiler: 5.3.0
           dune-cache: true
 
       - name: Lint doc
-        uses: ocaml/setup-ocaml/lint-doc@v2
+        uses: ocaml/setup-ocaml/lint-doc@v3
 
   lint-fmt:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
-      - name: Use OCaml 5.0.0
-        uses: ocaml/setup-ocaml@v2
+      - name: Setup OCaml
+        uses: ocaml/setup-ocaml@v3
         with:
-          ocaml-compiler: 5.0.0
+          ocaml-compiler: 5.3.0
           dune-cache: true
 
       - name: Lint fmt
-        uses: ocaml/setup-ocaml/lint-fmt@v2
+        uses: ocaml/setup-ocaml/lint-fmt@v3

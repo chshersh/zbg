@@ -122,14 +122,14 @@ explanations.
 | ----- | ----- |
 | `zbg clear` | `git add .` <br /> `git reset --hard` |
 | `zbg commit My description` | `git add .` <br /> `git commit --message="My description"` |
-| `zbg done` | `git checkout main` <br /> `git branch -d <branch we're switching from>` |
+| `zbg done` | `git switch main` <br /> `git branch --delete --force <branch we're switching from>` |
 | `zbg log` | `git log <long custom formatting string>` |
-| `zbg new Branch name` | `git checkout -b my-github-username/Branch-name` |
+| `zbg new Branch name` | `git switch --create my-github-username/Branch-name` |
 | `zbg push` | `git push --set-upstream origin <current-branch>` |
 | `zbg rebase` | `git fetch origin main` <br /> `git rebase origin/main` |
 | `zbg stash` | `git stash push --include-untracked` |
 | `zbg status` | `git status` (but `zbg` is prettier) |
-| `zbg switch` | `git checkout main` <br /> `git pull --ff-only --prune` |
+| `zbg switch` | `git switch main` <br /> `git pull --ff-only --prune` |
 | `zbg sync` | `git pull --ff-only origin <current-branch>` |
 | `zbg sync -f` | `git fetch origin <current-branch>` <br /> `git reset --hard origin/<current-branch>` |
 | `zbg tag v0.1.0` | `git tag --annotate %s --message='Tag for the v0.1.0 release'` <br /> `git push origin --tags` |

@@ -9,6 +9,9 @@ available [on GitHub][2].
 ## [Unreleased]
 
 <!-- Add new changes here -->
+
+## [0.3.0] - 2025-08-24 🧙‍♂️💀
+
 ### Fixed
 
 - [#26](https://github.com/chshersh/zbg/issues/26):
@@ -16,15 +19,18 @@ available [on GitHub][2].
   (by [@etorreborre])
 
 ### Changed
+
 - [#31](https://github.com/chshersh/zbg/pull/31):
   Command `zbg push -f` now uses git's `--force-with-lease` because it's a safer default
   (by [@kephas])
--[#10](https://github.com/chshersh/zbg/issues/10):
+- [#10](https://github.com/chshersh/zbg/issues/10):
   Changed `fetch_main_branch` to get the base name using `Core.Filename.basename` rather than reading the output of the `basename` command.
   (by [@leedsjohn])
 - [#16](https://github.com/chshersh/zbg/issues/16):
   `zbg status` now highlights staged files by making the file name bold and green.
   (by [@leedsjohn])
+- Use `--delete --force` in `zbg done` instead of just `--delete`.
+  (by [@chshersh])
 
 ## [0.2.0] — 2023-12-17 🎄
 
@@ -70,6 +76,7 @@ Initial release prepared by [@chshersh].
 
 <!-- Versions -->
 
-[Unreleased]: https://github.com/chshersh/zbg/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/chshersh/zbg/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/chshersh/zbg/releases/tag/v0.3.0
 [0.2.0]: https://github.com/chshersh/zbg/releases/tag/v0.2.0
 [0.1.0]: https://github.com/chshersh/zbg/releases/tag/v0.1.0
