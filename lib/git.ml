@@ -84,7 +84,7 @@ let log commit =
 
 let new_ description =
   let create_branch branch_name =
-    Process.proc @@ Printf.sprintf "git checkout -b %s" branch_name
+    Process.proc @@ Printf.sprintf "git switch --create %s" branch_name
   in
   let branch_description = mk_branch_description description in
   let branch_name =
@@ -128,7 +128,7 @@ let status = Status.status
 
 let switch branch_opt =
   let branch = branch_or_main branch_opt in
-  Process.proc @@ Printf.sprintf "git checkout %s" branch;
+  Process.proc @@ Printf.sprintf "git switch %s" branch;
   Process.proc "git pull --ff-only --prune"
 
 let sync force =
