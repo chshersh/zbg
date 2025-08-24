@@ -165,4 +165,4 @@ let done_ () =
   let main_branch = fetch_main_branch () in
   switch (Some main_branch);
   if String.( <> ) prev_branch main_branch then
-    Process.proc @@ Printf.sprintf "git branch --delete %s" prev_branch
+    Process.proc @@ Printf.sprintf "git branch --delete --force %s" prev_branch
