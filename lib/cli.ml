@@ -55,6 +55,10 @@ let cmd_rebase =
     (let%map_open.Command branch = anon (maybe ("branch" %: string)) in
      fun () -> Git.rebase branch)
 
+let cmd_continue =
+  Command.basic ~summary:"Add all files and continue with the rebase"
+    (Command.Param.return Git.continue)
+
 let cmd_stash =
   Command.basic ~summary:"Stash all local changes"
     (let%map_open.Command message = anon (maybe ("message" %: string)) in
@@ -108,6 +112,7 @@ let command =
       ("new", cmd_new);
       ("push", cmd_push);
       ("rebase", cmd_rebase);
+      ("continue", cmd_continue);
       ("stash", cmd_stash);
       ("status", cmd_status);
       ("switch", cmd_switch);

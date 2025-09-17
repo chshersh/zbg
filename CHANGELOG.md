@@ -9,6 +9,9 @@ available [on GitHub][2].
 ## [Unreleased]
 
 <!-- Add new changes here -->
+- [#37](https://github.com/chshersh/zbg/issues/37):
+  New command `zbg continue` continues after fixing conflicts during a rebase, (see [README.md](./README.md) for more details) 
+  (by [@joeyjooste])
 
 ## [0.3.0] - 2025-08-24 🧙‍♂️💀
 
@@ -68,6 +71,7 @@ Initial release prepared by [@chshersh].
 [@sloboegen]: https://github.com/sloboegen
 [@tekknoid]: https://github.com/tekknoid
 [@kephas]: https://github.com/kephas
+[@joeyjooste]: https://github.com/joeyjooste
 
 <!-- Header links -->
 

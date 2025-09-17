@@ -116,6 +116,10 @@ let rebase branch_opt =
   Process.proc @@ Printf.sprintf "git fetch origin %s" branch;
   Process.proc @@ Printf.sprintf "git rebase origin/%s" branch
 
+let continue () =
+  Process.proc "git add .";
+  Process.proc "git rebase --continue"
+
 let stash msg_opt =
   let msg_arg =
     match msg_opt with

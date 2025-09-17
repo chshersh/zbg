@@ -89,6 +89,8 @@ $ zbg sync     # Get the latest changes from your branch
 
 $ zbg rebase   # Rebase on top of the main branch if anything changed
 
+$ zbg continue # Continue after fixing rebase conflicts
+
 <start developing the experiment>
 
 $ zbg clear    # Nah, scrap that, bad idea
@@ -127,6 +129,7 @@ explanations.
 | `zbg new Branch name` | `git switch --create my-github-username/Branch-name` |
 | `zbg push` | `git push --set-upstream origin <current-branch>` |
 | `zbg rebase` | `git fetch origin main` <br /> `git rebase origin/main` |
+| `zbg continue` | `git add .` <br /> `git rebase --continue` |
 | `zbg stash` | `git stash push --include-untracked` |
 | `zbg status` | `git status` (but `zbg` is prettier) |
 | `zbg switch` | `git switch main` <br /> `git pull --ff-only --prune` |

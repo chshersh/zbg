@@ -25,6 +25,9 @@ val push : force_flag -> unit
 val rebase : string option -> unit
 (** Rebase local branch on top of origin/<branch>. *)
 
+val continue : unit -> unit
+(** Continue rebase after resolving conflicts. *)
+
 val stash : string option -> unit
 (** Stash all local changes. *)
 
